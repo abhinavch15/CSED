@@ -25,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnSignIn;
     private EditText editText, editText2;
     private ProgressBar progressBar;
-
+///git
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
