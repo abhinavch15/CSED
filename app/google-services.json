@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "16502432773",
+    "firebase_url": "https://csed-e45a5.firebaseio.com",
+    "project_id": "csed-e45a5",
+    "storage_bucket": "csed-e45a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16502432773:android:18aba552fc4a0384",
+        "android_client_info": {
+          "package_name": "com.sheild.abhinavchinta.csed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "16502432773-r6ep7n6l54mvp6980ncn74uqg4o4s31e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD40-MrPvpC1_hJyZBVSCr-xza3pp23qpU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
