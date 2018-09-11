@@ -190,12 +190,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
                                                         finish();
-
-
-
-
-
-
                                                     }
                                                 }
                                             });

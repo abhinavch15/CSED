@@ -96,18 +96,18 @@ public class TasksFragment extends Fragment {
                 linearLayout = (LinearLayout)itemView.findViewById(R.id.linearlayout);
                 final View view1 = (View)itemView.findViewById(R.id.status);
                 view1.setTag(0);
-                linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (view1.getTag().equals(0)){
-                        view1.setBackgroundColor(Color.parseColor("#20B41D"));
-                        view1.setTag(1);}
-                        else {
-                            view1.setBackgroundColor(Color.parseColor("#B83232"));
-                            view1.setTag(0);
-                        }
-                    }
-                });
+//                linearLayout.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        if (view1.getTag().equals(0)){
+//                        view1.setBackgroundColor(Color.parseColor("#20B41D"));
+//                        view1.setTag(1);}
+//                        else {
+//                            view1.setBackgroundColor(Color.parseColor("#B83232"));
+//                            view1.setTag(0);
+//                        }
+//                    }
+//                });
             }
 
 

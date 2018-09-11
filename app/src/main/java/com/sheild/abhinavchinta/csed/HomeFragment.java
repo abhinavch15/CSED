@@ -1,6 +1,8 @@
 package com.sheild.abhinavchinta.csed;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,7 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.abhinavchinta.csed.R;
 import com.sheild.abhinavchinta.csed.models.Member;
@@ -65,6 +69,7 @@ public class HomeFragment extends Fragment {
 
         private List<Member> listarray = new ArrayList<>();
 
+
         public MyAdapter(List<Member> list){
             this.listarray= Test.getListmembers();
         }
@@ -77,9 +82,16 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(HomeFragment.MyAdapter.MyViewHolder holder, int position) {
-            Member member = listarray.get(position);
+            final Member member = listarray.get(position);
             holder.textViewdate.setText(Strings.getDepartmentName(member.getDepartment()));
             holder.textViewname.setText(member.getName());
+            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Toast.makeText(getContext(),""+member.getPhoneNumber(),Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+member.getPhoneNumber())));
+                }
+            });
             //holder.textViewname.setText(member.getName());
         }
 
@@ -88,11 +100,19 @@ public class HomeFragment extends Fragment {
             TextView textViewmessage;
             TextView textViewname;
             TextView textViewdate;
+            LinearLayout linearLayout;
             public MyViewHolder(View itemView) {
                 super(itemView);
                 //textViewmessage = (TextView)itemView.findViewById(R.id.message_content);
                 textViewname = (TextView)itemView.findViewById(R.id.member_name);
                 textViewdate = (TextView)itemView.findViewById(R.id.member_dept);
+                linearLayout = (LinearLayout)itemView.findViewById(R.id.linearlayout1);
+                linearLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
             }
         }
 

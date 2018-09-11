@@ -3,27 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#de302f"
+    android:background="#212121"
     android:layout_height="match_parent"
     tools:context="com.example.abhinavchinta.csed.com.sheild.abhinavchinta.csed.SplashActivity">
-
-    <TextView
-        android:visibility="invisible"
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="104dp"
-        android:fontFamily="@font/helveticaneuebd"
-        android:text="SHEILD"
-        android:textColor="#DDDDDD"
-        android:textSize="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar2"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.166" />
 
     <ProgressBar
         android:visibility="invisible"
@@ -49,6 +31,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.297"
-        app:srcCompat="@mipmap/sheildlogo" />
+        app:srcCompat="@mipmap/nobg" />
 
 </android.support.constraint.ConstraintLayout>
