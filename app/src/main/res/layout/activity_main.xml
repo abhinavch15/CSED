@@ -4,42 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:titleTextColor="#DDD">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="SHIELD"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"/>
-
-        <RelativeLayout
-            android:layout_width="155dp"
-            android:gravity="right"
-            android:layout_marginLeft="130dp"
-            android:background="@android:color/transparent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:layout_marginRight="2dp"
-                android:id="@+id/logoutmenu"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/menuicon"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true" />
-
-        </RelativeLayout>
-
-
-    </android.support.v7.widget.Toolbar>
+    <include
+        layout="@layout/toolbar"/>
 
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"

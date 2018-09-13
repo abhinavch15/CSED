@@ -1,6 +1,7 @@
 package com.sheild.abhinavchinta.csed;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -30,19 +31,39 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setElevation(10f);
+        }
+        toolbar.inflateMenu(R.menu.menu_main);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                String title = (String) item.getTitle();
+                switch(item.getItemId()) {
+                    case R.id.logout:
+                        auth.signOut();
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case R.id.search:
+                        break;
+                }
+                return true;
+            }
+        });
         ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
         FragmentPageAdapter adapter = new FragmentPageAdapter(getSupportFragmentManager());
         viewpager.setAdapter(adapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewpager);
+    }
+
 
 
         /*DBR = database.getReference("messages");
@@ -77,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        final Button menu = (Button)findViewById(R.id.logoutmenu);
+        /*final Button menu = (Button)findViewById(R.id.logoutmenu);
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,22 +116,24 @@ public class MainActivity extends AppCompatActivity {
                 });
                 popupMenu.show();
             }
-        });
-    }
+        });*/
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
+    }*/
 
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
 
             if (id == R.id.logout) {
+                auth.signOut();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             return true;
         }
 

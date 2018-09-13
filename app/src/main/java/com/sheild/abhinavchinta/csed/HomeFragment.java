@@ -68,6 +68,7 @@ public class HomeFragment extends Fragment {
     public class MyAdapter extends RecyclerView.Adapter<HomeFragment.MyAdapter.MyViewHolder>{
 
         private List<Member> listarray = new ArrayList<>();
+        private List<Member> listarrayfull;
 
 
         public MyAdapter(List<Member> list){
