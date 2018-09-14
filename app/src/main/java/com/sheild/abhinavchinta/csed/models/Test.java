@@ -11,8 +11,7 @@ public class Test {
     public static List<Task> listtasks= new ArrayList<>();
     public static String name;
     public static String department;
-
-
+    public static int IsAdmin;
 
     public Test() {
     }

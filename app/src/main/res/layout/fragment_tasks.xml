@@ -11,8 +11,23 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recyclerview3">
+        android:id="@+id/recyclerview3"
+        android:layout_weight="2">
 
     </android.support.v7.widget.RecyclerView>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/taskbutton"
+        android:text="Add New Task"
+        android:background="@drawable/custom_button"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="60dp"
+        android:textColor="#DDD"
+        android:textStyle="bold"
+        android:layout_marginRight="60dp"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

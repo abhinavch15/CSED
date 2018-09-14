@@ -114,6 +114,7 @@ public class SplashActivity extends AppCompatActivity {
                         Member mymember= dataSnapshot.getValue(Member.class);
                         Test.name=mymember.getName();
                         Test.department= Strings.getDepartmentName(mymember.getDepartment());
+                        Test.IsAdmin = mymember.getIsAdmin();
 
                     }
                 }
