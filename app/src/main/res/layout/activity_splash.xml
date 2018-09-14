@@ -8,7 +8,7 @@
     tools:context="com.example.abhinavchinta.csed.com.sheild.abhinavchinta.csed.SplashActivity">
 
     <ProgressBar
-        android:visibility="invisible"
+        android:visibility="visible"
         android:id="@+id/progressBar2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,8 +22,9 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="189dp"
-        android:layout_height="171dp"
+        android:padding="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,6 +32,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.297"
-        app:srcCompat="@mipmap/nobg" />
+        app:srcCompat="@mipmap/csedwhite" />
 
 </android.support.constraint.ConstraintLayout>
