@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 
 public class FragmentPageAdapter extends FragmentPagerAdapter {
-    private String tabTitles[] = new String[] { "Home", "Tasks", "Messages","Divisions" };
+    private String tabTitles[] = new String[] { "Home", "Tasks", "Messages","Uploads" };
     public FragmentPageAdapter(FragmentManager fm) {
         super(fm);
     }

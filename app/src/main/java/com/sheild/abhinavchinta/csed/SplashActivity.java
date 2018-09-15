@@ -3,6 +3,7 @@ package com.sheild.abhinavchinta.csed;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.example.abhinavchinta.csed.R;
 import com.sheild.abhinavchinta.csed.models.Member;
@@ -26,11 +27,14 @@ import java.util.List;
 public class SplashActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
-    private List<Message> listdata1= new ArrayList<>();
-    private List<Member> listdata2= new ArrayList<>();
-    private List<Task> listdata3= new ArrayList<>();
-    private FirebaseDatabase database;
-    private DatabaseReference DBRmessages, DBRmembers, DBRtasks;
+    public static List<Message> listdata1= new ArrayList<>();
+    public static List<Member> listdata2= new ArrayList<>();
+    public static List<Task> listdata3= new ArrayList<>();
+    private static FirebaseDatabase database;
+    private static DatabaseReference DBRmessages;
+    private DatabaseReference DBRmembers;
+    private DatabaseReference DBRtasks;
+    private int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +46,10 @@ public class SplashActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
-
-        GetMembers();
-        GetMessages();
-        GetTasks();
+            count=0;
+            GetMembers();
+            GetMessages();
+            GetTasks();
         }
         else {
             startActivity(new Intent(SplashActivity.this, LoginActivity.class));
@@ -54,7 +58,7 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    void GetMessages(){
+     void GetMessages(){
 
             DBRmessages = database.getReference("messages");
             listdata1.clear();
@@ -62,8 +66,11 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Test.listdata=listdata1;
-                    /*startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    finish();*/
+                    count++;
+                    if (count==3) {
+                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                        finish();
+                    }
                 }
 
                 @Override
@@ -114,6 +121,7 @@ public class SplashActivity extends AppCompatActivity {
                         Member mymember= dataSnapshot.getValue(Member.class);
                         Test.name=mymember.getName();
                         Test.department= Strings.getDepartmentName(mymember.getDepartment());
+                        Test.departmentcode = mymember.getDepartment();
                         Test.IsAdmin = mymember.getIsAdmin();
 
                     }
@@ -135,8 +143,11 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Test.listmembers=listdata2;
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                finish();
+                count++;
+                if (count==3) {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
+                }
             }
 
             @Override
@@ -174,8 +185,11 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Test.listtasks=listdata3;
-//                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-//                finish();
+                count++;
+                if (count==3) {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
+                }
             }
 
             @Override
@@ -184,10 +198,15 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
         DBRtasks.addChildEventListener(new ChildEventListener() {
+            public static final String TAG = "";
+
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Task task= dataSnapshot.getValue(Task.class);
-                listdata3.add(task);
+                Log.i(TAG, "comparingggg "+task.getDepartmentCode()+"and"+Test.getDepartmentcode());
+                if (task.getDepartmentCode().equals(Test.getDepartmentcode())) {
+                    listdata3.add(task);
+                }
             }
 
             @Override

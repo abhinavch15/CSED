@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhinavchinta.csed.R;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.sheild.abhinavchinta.csed.models.Member;
 import com.sheild.abhinavchinta.csed.models.Strings;
 import com.sheild.abhinavchinta.csed.models.Test;
@@ -37,7 +41,8 @@ public class HomeFragment extends Fragment {
     private HomeFragment.MyAdapter adapter;
     private List<Member> listdataa= new ArrayList<>();
     private FirebaseDatabase database;
-    private DatabaseReference DBR;
+    private DatabaseReference DBRmembers;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     public HomeFragment() {
@@ -59,6 +64,36 @@ public class HomeFragment extends Fragment {
         txvname.setText(Test.getName());
         department.setText(Test.getDepartment());
 
+        swipeRefreshLayout = (SwipeRefreshLayout)rootview.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Test.listmembers.clear();
+                DBRmembers = database.getReference("member");
+                DBRmembers.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Member member= dataSnapshot.getValue(Member.class);
+                        Test.listmembers.add(member);
+                        adapter = new HomeFragment.MyAdapter(listdataa);
+                        recyclerView.setAdapter(adapter);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+            });
+            }
+        });
 
         RecyclerView.LayoutManager LM = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(LM);

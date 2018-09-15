@@ -1,19 +1,24 @@
 package com.sheild.abhinavchinta.csed;
 
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +30,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.sheild.abhinavchinta.csed.models.Member;
 import com.sheild.abhinavchinta.csed.models.Task;
 import com.sheild.abhinavchinta.csed.models.Test;
@@ -34,10 +42,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
+import static android.media.CamcorderProfile.get;
 
 
 /**
@@ -54,7 +65,12 @@ public class TasksFragment extends Fragment {
     private DatabaseReference DBR;
     private Button button;
     private FirebaseDatabase db;
+    private DatabaseReference DBRtasks;
     private DatabaseReference dbr;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private static String duedate;
+    private static String message;
+
 
     public TasksFragment() {
         // Required empty public constructor
@@ -72,10 +88,19 @@ public class TasksFragment extends Fragment {
         RecyclerView.LayoutManager LM = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(LM);
 
+        swipeRefreshLayout = (SwipeRefreshLayout)rootview.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+
         button = (Button)rootview.findViewById(R.id.taskbutton);
         if (Test.IsAdmin==0){button.setVisibility(View.GONE);}
         final CharSequence[] items = {" Editorial and Blog "," Events, UR and Strategies "," Expansion "," General Secretary" ," Human Resources "," Marketing "," Public Relations "," Startups "," Technical and Design"};
         final List<Integer> seletedItems=new ArrayList<Integer>();
+        seletedItems.clear();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +123,7 @@ public class TasksFragment extends Fragment {
                                 //  Your code when user clicked on OK
                                 //  You can write the code  to save the selected item here
                                 for (int a :seletedItems) {
-                                    Log.i(TAG, "values are "+a );
+                                    Log.i(TAG, "values aree "+a );
                                 }
 
                                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
@@ -113,20 +138,36 @@ public class TasksFragment extends Fragment {
 
                                 alertDialog.setPositiveButton("SUBMIT",
                                         new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                String message = input.getText().toString();
-                                                for (int a :seletedItems) {
-                                                    Task newtask = new Task();
-                                                    newtask.setDepartmentCode(String.valueOf(a));
-                                                    newtask.setMessage(message);
-                                                    newtask.setDate("DATE");
 
-                                                    db= FirebaseDatabase.getInstance();
-                                                    dbr = db.getReference().child("task");
-                                                    String id  = dbr.push().getKey();
-                                                    dbr.child(id).setValue(newtask);
-                                                }
-                                                seletedItems.clear();
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                message = input.getText().toString();
+                                                Calendar c = Calendar.getInstance();
+                                                int mYear = c.get(Calendar.YEAR);
+                                                int mMonth = c.get(Calendar.MONTH);
+                                                int mDay = c.get(Calendar.DAY_OF_MONTH);
+                                                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                                                        getContext(), new DatePickerDialog.OnDateSetListener() {
+                                                    @Override
+                                                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                                        duedate = day+"/"+month+"/"+year;
+                                                        Log.i(TAG, "onDateSet: "+day+"/"+month+"/"+year);
+                                                        for (int a :seletedItems) {
+                                                            Log.i(TAG, "onDateSet: reached");
+                                                            Task newtask = new Task();
+                                                            newtask.setDepartmentCode(String.valueOf(a));
+                                                            newtask.setMessage(message);
+                                                            newtask.setDate(new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date()));
+                                                            newtask.setDeadline(duedate);
+                                                            newtask.setName(Test.name);
+                                                            db= FirebaseDatabase.getInstance();
+                                                            dbr = db.getReference().child("task");
+                                                            String id  = dbr.push().getKey();
+                                                            dbr.child(id).setValue(newtask);
+                                                        }
+                                                        seletedItems.clear();
+                                                    }
+                                                },  mYear, mMonth, mDay);
+                                                datePickerDialog.show();
                                             }
                                         });
 
@@ -137,10 +178,8 @@ public class TasksFragment extends Fragment {
                                                 seletedItems.clear();
                                             }
                                         });
-
                                 alertDialog.show();
                             }
-
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
@@ -148,18 +187,30 @@ public class TasksFragment extends Fragment {
                             }
                         }).create();
                 dialog.show();
+                refresh();
             }
         });
 
         return rootview;
     }
 
+    private void refresh() {
+        //reload tasks
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+
+
+
     public class MyAdapter extends RecyclerView.Adapter<TasksFragment.MyAdapter.MyViewHolder>{
 
         private List<Task> listarray = new ArrayList<>();
 
         public MyAdapter(List<Task> list){
-            this.listarray= Test.getListtasks();
+            this.listarray.clear();
+
+            this.listarray= Test.listtasks;
+            //Collections.reverse(this.listarray);
         }
 
         @Override
@@ -174,7 +225,7 @@ public class TasksFragment extends Fragment {
             holder.textViewdate.setText(task.getDate());
             holder.textViewname.setText(task.getName());
             holder.textViewmessage.setText(task.getMessage());
-            holder.textViewdeadline.setText(task.getDeadline());
+            holder.textViewdeadline.setText("Deadline: "+task.getDeadline());
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder{

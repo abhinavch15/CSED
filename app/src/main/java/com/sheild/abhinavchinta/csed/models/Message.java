@@ -22,6 +22,34 @@ public class Message {
         this.time = time;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setDeptcode(String deptcode) {
+        this.deptcode = deptcode;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRegno(String regno) {
+        this.regno = regno;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     public String getDate() {
         return date;
     }

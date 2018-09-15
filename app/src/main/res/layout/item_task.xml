@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:textSize="10dp"
-                    android:text="Deadline: 16th February, 2018"
+                    android:text="Deadline: "
                     android:textColor="#DDDDDD"
                     android:fontFamily="@font/md"/>
             </LinearLayout>
