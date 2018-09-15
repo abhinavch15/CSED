@@ -1,0 +1,69 @@
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="20dp"
+        android:orientation="horizontal">
+
+        <View
+
+            android:layout_margin="5dp"
+            android:layout_height="5dp"
+            android:layout_width="5dp"
+            android:background="@drawable/circle" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/uploader_name"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content"
+                    android:text="Aakash Varma : VP Tech "
+                    android:textColor="#DDDDDD"
+                    android:fontFamily="@font/helveticaneuebd"/>
+                <TextView
+                    android:id="@+id/message_date_time"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="2/2/18, 10:45 PM"                android:layout_gravity="right"
+                    android:textAlignment="textEnd"
+                    android:textSize="10dp"
+                    android:textColor="#DDDDDD"
+                    android:fontFamily="@font/helveticaneuebd"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/upload_file_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="20dp"
+                    android:text="Tech and Design meeting at SMV. 7:30 sharp"
+                    android:textColor="#DDDDDD"
+                    android:fontFamily="@font/light"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

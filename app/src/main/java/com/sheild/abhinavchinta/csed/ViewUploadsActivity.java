@@ -1,13 +1,22 @@
 package com.sheild.abhinavchinta.csed;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.abhinavchinta.csed.R;
 import com.google.firebase.database.DataSnapshot;
@@ -15,7 +24,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sheild.abhinavchinta.csed.models.Message;
 import com.sheild.abhinavchinta.csed.models.Strings;
+import com.sheild.abhinavchinta.csed.models.Test;
 import com.sheild.abhinavchinta.csed.models.Upload;
 
 import java.util.ArrayList;
@@ -30,6 +41,8 @@ public class ViewUploadsActivity extends AppCompatActivity {
 
     //list to store uploads data
     List<Upload> uploadList;
+    private RecyclerView recyclerView;
+    private MyAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,22 +50,7 @@ public class ViewUploadsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_uploads);
 
         uploadList = new ArrayList<>();
-        listView = (ListView) findViewById(R.id.listView);
-
-
-        //adding a clicklistener on listview
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //getting the upload
-                Upload upload = uploadList.get(i);
-
-                //Opening the upload file in browser using the upload url
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(upload.getUrl()));
-                startActivity(intent);
-            }
-        });
+        //recyclerView = (RecyclerView) findViewById(R.id.listVi
 
 
         //getting the database reference
@@ -74,8 +72,19 @@ public class ViewUploadsActivity extends AppCompatActivity {
                 }
 
                 //displaying it to list
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, uploads);
-                listView.setAdapter(adapter);
+                //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, uploads);
+                //View header = (View)getLayoutInflater().inflate(R.layout.listview_header_row, null);
+                //listView.addHeaderView(header);
+                //MyAdapter adapter = new MyAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, uploadList);
+                //listView1.setAdapter(adapter);
+                //listView.setAdapter(adapter);
+
+
+                adapter = new MyAdapter(uploadList);
+                recyclerView= (RecyclerView)findViewById(R.id.listViewr);
+                recyclerView.setAdapter(adapter);
+                RecyclerView.LayoutManager LM = new LinearLayoutManager(getApplicationContext());
+                recyclerView.setLayoutManager(LM);
             }
 
             @Override
@@ -83,6 +92,60 @@ public class ViewUploadsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public class MyAdapter extends RecyclerView.Adapter<ViewUploadsActivity.MyAdapter.MyViewHolder>{
+
+        private List<Upload> listarray = new ArrayList<>();
+        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int itemPosition = recyclerView.getChildLayoutPosition(view);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                Upload upload = uploadList.get(itemPosition);
+                intent.setData(Uri.parse(upload.getUrl()));
+                startActivity(intent);
+            }
+        };
+
+
+        public MyAdapter(List<Upload> list){
+            this.listarray= list;
+        }
+
+        @Override
+        public ViewUploadsActivity.MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message,parent,false);
+            view.setOnClickListener(mOnClickListener);
+            return new MyAdapter.MyViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, int position) {
+            Upload upload = listarray.get(position);
+            holder.textViewdate.setText(upload.getName());
+            holder.textViewmessage.setText(upload.getName());
+            holder.textViewname.setText(upload.getName());
+        }
+
+
+        public class MyViewHolder extends RecyclerView.ViewHolder{
+
+            TextView textViewmessage;
+            TextView textViewname;
+            TextView textViewdate;
+            public MyViewHolder(View itemView) {
+                super(itemView);
+                textViewmessage = (TextView)itemView.findViewById(R.id.message_content);
+                textViewname = (TextView)itemView.findViewById(R.id.message_name);
+                textViewdate = (TextView)itemView.findViewById(R.id.message_date_time);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return listarray.size();
+        }
     }
 
 
