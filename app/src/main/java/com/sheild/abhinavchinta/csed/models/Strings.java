@@ -29,7 +29,7 @@ public class Strings {
             case ("4"):
                 return ("Human Resources");
 
-            case ("#5"):
+            case ("5"):
                 return ("Marketing");
 
             case ("6"):

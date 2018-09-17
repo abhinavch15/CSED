@@ -143,7 +143,6 @@ public class RegistrationActivity extends AppCompatActivity {
                                             .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                                    Toast.makeText(RegistrationActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                                                     //progressBar.setVisibility(View.GONE);
                                                     // If sign in fails, display a message to the user. If sign in succeeds
                                                     // the auth state listener will be notified and logic to handle the
@@ -178,7 +177,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                                         //startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
                                                         //Toast.makeText(RegistrationActivity.this, "Authentication success." + task.getException(),Toast.LENGTH_LONG).show();
 
-                                                        Member member = new Member(1,"#"+seletedItems.get(0).toString(),"Core committee member",email,0,name,phno,regno);
+                                                        Member member = new Member(1,seletedItems.get(0).toString(),"Core committee member",email,0,name,phno,regno);
                                                         db= FirebaseDatabase.getInstance();
                                                         dbr = db.getReference().child("member").child(auth.getUid());
                                                         dbr.setValue(member);

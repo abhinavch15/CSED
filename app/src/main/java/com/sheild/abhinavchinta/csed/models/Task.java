@@ -11,13 +11,19 @@ public class Task {
     private String registrationNumber;
     private int status;
     private String time;
+    int day;
+    int month;
+    int year;
 
     public Task(){
 
     }
 
-    public Task(String date, String deadline, String departmentCode, String designation, String message, String name, String registrationNumber, int  status, String time) {
+    public Task(String date, int day, int month, int year, String deadline, String departmentCode, String designation, String message, String name, String registrationNumber, int  status, String time) {
         this.date = date;
+        this.day = day;
+        this.month = month;
+        this.year = year;
         this.deadline = deadline;
         this.departmentCode = departmentCode;
         this.designation = designation;
@@ -27,6 +33,18 @@ public class Task {
         this.status = status;
         this.time = time;
     }
+
+    public int getDay() {return day;}
+
+    public void setDay(int day) {this.day = day;}
+
+    public int getMonth() {return month;}
+
+    public void setMonth(int month) {this.month = month;}
+
+    public int getYear() {return year;}
+
+    public void setYear(int year) {this.year = year;}
 
     public String getDate() {
         return date;

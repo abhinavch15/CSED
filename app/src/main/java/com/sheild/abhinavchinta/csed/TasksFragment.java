@@ -3,6 +3,7 @@ package com.sheild.abhinavchinta.csed;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.icu.util.Calendar;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.sheild.abhinavchinta.csed.models.Member;
 import com.sheild.abhinavchinta.csed.models.Task;
 import com.sheild.abhinavchinta.csed.models.Test;
@@ -49,6 +51,10 @@ import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 import static android.media.CamcorderProfile.get;
+import static com.sheild.abhinavchinta.csed.SplashActivity.day;
+import static com.sheild.abhinavchinta.csed.SplashActivity.listdata3;
+import static com.sheild.abhinavchinta.csed.SplashActivity.month;
+import static com.sheild.abhinavchinta.csed.SplashActivity.year;
 
 
 /**
@@ -97,7 +103,7 @@ public class TasksFragment extends Fragment {
         });
 
         button = (Button)rootview.findViewById(R.id.taskbutton);
-        if (Test.IsAdmin==0){button.setVisibility(View.GONE);}
+        //if (Test.IsAdmin==0){button.setVisibility(View.GONE);}
         final CharSequence[] items = {" Editorial and Blog "," Events, UR and Strategies "," Expansion "," General Secretary" ," Human Resources "," Marketing "," Public Relations "," Startups "," Technical and Design"};
         final List<Integer> seletedItems=new ArrayList<Integer>();
         seletedItems.clear();
@@ -105,7 +111,7 @@ public class TasksFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 AlertDialog dialog = new AlertDialog.Builder(getContext())
-                        .setTitle("Please select the departments you work for")
+                        .setTitle("Please select the departments you want to assign the task to")
                         .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
@@ -123,7 +129,6 @@ public class TasksFragment extends Fragment {
                                 //  Your code when user clicked on OK
                                 //  You can write the code  to save the selected item here
                                 for (int a :seletedItems) {
-                                    Log.i(TAG, "values aree "+a );
                                 }
 
                                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
@@ -142,13 +147,14 @@ public class TasksFragment extends Fragment {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 message = input.getText().toString();
                                                 Calendar c = Calendar.getInstance();
-                                                int mYear = c.get(Calendar.YEAR);
-                                                int mMonth = c.get(Calendar.MONTH);
-                                                int mDay = c.get(Calendar.DAY_OF_MONTH);
+                                                int year = c.get(Calendar.YEAR);
+                                                int month = c.get(Calendar.MONTH);
+                                                int day = c.get(Calendar.DAY_OF_MONTH);
                                                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                                                         getContext(), new DatePickerDialog.OnDateSetListener() {
                                                     @Override
                                                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                                        month++;
                                                         duedate = day+"/"+month+"/"+year;
                                                         Log.i(TAG, "onDateSet: "+day+"/"+month+"/"+year);
                                                         for (int a :seletedItems) {
@@ -156,8 +162,11 @@ public class TasksFragment extends Fragment {
                                                             Task newtask = new Task();
                                                             newtask.setDepartmentCode(String.valueOf(a));
                                                             newtask.setMessage(message);
-                                                            newtask.setDate(new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date()));
+                                                            newtask.setDate(new SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(new Date()));
                                                             newtask.setDeadline(duedate);
+                                                            newtask.setDay(day);
+                                                            newtask.setMonth(month);
+                                                            newtask.setYear(year);
                                                             newtask.setName(Test.name);
                                                             db= FirebaseDatabase.getInstance();
                                                             dbr = db.getReference().child("task");
@@ -166,7 +175,9 @@ public class TasksFragment extends Fragment {
                                                         }
                                                         seletedItems.clear();
                                                     }
-                                                },  mYear, mMonth, mDay);
+                                                },  year, month, day);
+                                                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);//test this
+                                                datePickerDialog.setTitle("Select the deadline");
                                                 datePickerDialog.show();
                                             }
                                         });
@@ -187,7 +198,6 @@ public class TasksFragment extends Fragment {
                             }
                         }).create();
                 dialog.show();
-                refresh();
             }
         });
 
@@ -196,8 +206,51 @@ public class TasksFragment extends Fragment {
 
     private void refresh() {
         //reload tasks
-        swipeRefreshLayout.setRefreshing(false);
+        DBRtasks = database.getReference("task");
+        listdata3.clear();
+        DBRtasks.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        DBRtasks.addChildEventListener(new ChildEventListener() {
+            public static final String TAG = "";
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                test(dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {test(dataSnapshot);}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {test(dataSnapshot);}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {test(dataSnapshot);}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
     }
+
+    private void test(DataSnapshot dataSnapshot)
+    {
+        Task task= dataSnapshot.getValue(Task.class);
+        if (task.getDepartmentCode().equals(Test.getDepartmentcode())&&((task.getDay()>=day&&task.getMonth()==month&&task.getYear()==year)||(task.getMonth()>month&&task.getYear()==year)||(task.getYear()>year))) {
+            listdata3.add(task);
+            Log.i(TAG, "Current: "+day+"/"+month+"/"+year);
+            Log.i(TAG, "From database: "+task.getDay()+"/"+task.getMonth()+"/"+task.getYear());
+        }
+    }
+
 
 
 
@@ -209,7 +262,7 @@ public class TasksFragment extends Fragment {
         public MyAdapter(List<Task> list){
             this.listarray.clear();
 
-            this.listarray= Test.listtasks;
+            this.listarray= listdata3;
             //Collections.reverse(this.listarray);
         }
 

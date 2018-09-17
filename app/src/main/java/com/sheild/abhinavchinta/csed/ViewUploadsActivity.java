@@ -115,7 +115,7 @@ public class ViewUploadsActivity extends AppCompatActivity {
 
         @Override
         public ViewUploadsActivity.MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_upload,parent,false);
             view.setOnClickListener(mOnClickListener);
             return new MyAdapter.MyViewHolder(view);
         }
@@ -123,9 +123,15 @@ public class ViewUploadsActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position) {
             Upload upload = listarray.get(position);
-            holder.textViewdate.setText(upload.getName());
+            holder.textViewdate.setText(upload.getDate());
             holder.textViewmessage.setText(upload.getName());
-            holder.textViewname.setText(upload.getName());
+            holder.textViewname.setText(upload.getAuthor());
+            if (upload.type==1){
+                holder.filetype.setBackgroundResource(R.mipmap.iconimage);
+            }
+            else {
+                holder.filetype.setBackgroundResource(R.mipmap.iconpdf);
+            }
         }
 
 
@@ -134,11 +140,13 @@ public class ViewUploadsActivity extends AppCompatActivity {
             TextView textViewmessage;
             TextView textViewname;
             TextView textViewdate;
+            ImageView filetype;
             public MyViewHolder(View itemView) {
                 super(itemView);
                 textViewmessage = (TextView)itemView.findViewById(R.id.message_content);
                 textViewname = (TextView)itemView.findViewById(R.id.message_name);
                 textViewdate = (TextView)itemView.findViewById(R.id.message_date_time);
+                filetype = (ImageView) itemView.findViewById(R.id.iconfiletype1);
             }
         }
 

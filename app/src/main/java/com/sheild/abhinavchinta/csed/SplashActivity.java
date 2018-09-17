@@ -1,6 +1,7 @@
 package com.sheild.abhinavchinta.csed;
 
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,11 +36,20 @@ public class SplashActivity extends AppCompatActivity {
     private DatabaseReference DBRmembers;
     private DatabaseReference DBRtasks;
     private int count;
+    public static int day;
+    public static int month;
+    public static int year;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        Calendar c = Calendar.getInstance();
+        year = c.get(Calendar.YEAR);
+        month = (c.get(Calendar.MONTH)+1);
+        day = c.get(Calendar.DAY_OF_MONTH);
 
         database = FirebaseDatabase.getInstance();
 
@@ -55,7 +65,6 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
         }
-
     }
 
      void GetMessages(){
@@ -65,6 +74,7 @@ public class SplashActivity extends AppCompatActivity {
             DBRmessages.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.i("TAG", "HEEEEEEERE");
                     Test.listdata=listdata1;
                     count++;
                     if (count==3) {
@@ -204,8 +214,10 @@ public class SplashActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Task task= dataSnapshot.getValue(Task.class);
                 Log.i(TAG, "comparingggg "+task.getDepartmentCode()+"and"+Test.getDepartmentcode());
-                if (task.getDepartmentCode().equals(Test.getDepartmentcode())) {
+                if (task.getDepartmentCode().equals(Test.getDepartmentcode())&&((task.getDay()>=day&&task.getMonth()==month&&task.getYear()==year)||(task.getMonth()>month&&task.getYear()==year)||(task.getYear()>year))) {
                     listdata3.add(task);
+                    Log.i(TAG, "Current: "+day+"/"+month+"/"+year);
+                    Log.i(TAG, "From database: "+task.getDay()+"/"+task.getMonth()+"/"+task.getYear());
                 }
             }
 

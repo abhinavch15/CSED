@@ -4,10 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#212121"
+    android:background="#262626"
 
     tools:context="com.sheild.abhinavchinta.csed.ViewUploadsActivity">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:id="@+id/layout1"
+        android:layout_height="wrap_content">
+        <include
+            layout="@layout/toolbar"/>
+
+
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_below="@+id/layout1"
+        android:elevation="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="0dp"
+        android:background="@drawable/rectangle">
+        <TextView
+            android:id="@+id/text"
+            android:fontFamily="@font/helveticaneuebd"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#DDDDDD"
+            android:textSize="28dp"
+            android:text="Uploads" />
+
+
+    </LinearLayout>
     <android.support.v7.widget.RecyclerView
+        android:layout_below="@+id/layout"
         android:id="@+id/listViewr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

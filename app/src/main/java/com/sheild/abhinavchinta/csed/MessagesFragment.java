@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +45,7 @@ public class MessagesFragment extends Fragment {
     private Button button;
     private FirebaseDatabase db;
     private DatabaseReference dbr;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public MessagesFragment() {
     }
@@ -58,15 +61,24 @@ public class MessagesFragment extends Fragment {
         adapter = new MyAdapter(listdataa);
         recyclerView= (RecyclerView)rootview.findViewById(R.id.recyclerview1);
         recyclerView.setAdapter(adapter);
-        RecyclerView.LayoutManager LM = new LinearLayoutManager(getContext());
+        LinearLayoutManager LM = new LinearLayoutManager(getContext());
+        LM.setReverseLayout(true);
+        LM.setStackFromEnd(true);
         recyclerView.setLayoutManager(LM);
 
+        swipeRefreshLayout = (SwipeRefreshLayout)rootview.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+
         button = (Button)rootview.findViewById(R.id.messagebutton);
-        if (Test.IsAdmin==0){button.setVisibility(View.GONE);}
+        //if (Test.IsAdmin==0){button.setVisibility(View.GONE);}
         button.setOnClickListener(new View.OnClickListener() {
                                       @Override
                                       public void onClick(View view) {
-
                                           AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                                 alertDialog.setMessage("Enter Message");
 
@@ -85,7 +97,7 @@ public class MessagesFragment extends Fragment {
                                                 Message newmessage = new Message();
                                                 newmessage.setMessage(message);
                                                 newmessage.setName(Test.name);
-                                                newmessage.setDate(new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date()));
+                                                newmessage.setDate(new SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(new Date()));
                                                 db= FirebaseDatabase.getInstance();
                                                 dbr = db.getReference().child("messages");
                                                 String id  = dbr.push().getKey();
@@ -109,13 +121,18 @@ public class MessagesFragment extends Fragment {
         return rootview;
     }
 
+    private void refresh() {
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
 
     public class MyAdapter extends RecyclerView.Adapter<MessagesFragment.MyAdapter.MyViewHolder>{
 
         private List<Message> listarray = new ArrayList<>();
 
         public MyAdapter(List<Message> list){
-            this.listarray=Test.getListdata();
+            this.listarray=SplashActivity.listdata1;
+            //Collections.reverse(this.listarray);
         }
 
         @Override
