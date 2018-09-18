@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhinavchinta.csed.R;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.sheild.abhinavchinta.csed.models.Message;
 import com.sheild.abhinavchinta.csed.models.Test;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -31,6 +36,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static android.content.ContentValues.TAG;
+import static com.sheild.abhinavchinta.csed.SplashActivity.listdata1;
 
 
 public class MessagesFragment extends Fragment {
@@ -46,6 +54,7 @@ public class MessagesFragment extends Fragment {
     private FirebaseDatabase db;
     private DatabaseReference dbr;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private DatabaseReference DBRmessages;
 
     public MessagesFragment() {
     }
@@ -62,8 +71,8 @@ public class MessagesFragment extends Fragment {
         recyclerView= (RecyclerView)rootview.findViewById(R.id.recyclerview1);
         recyclerView.setAdapter(adapter);
         LinearLayoutManager LM = new LinearLayoutManager(getContext());
-        LM.setReverseLayout(true);
-        LM.setStackFromEnd(true);
+        //LM.setReverseLayout(true);
+        //LM.setStackFromEnd(true);
         recyclerView.setLayoutManager(LM);
 
         swipeRefreshLayout = (SwipeRefreshLayout)rootview.findViewById(R.id.swipeRefreshLayout);
@@ -121,18 +130,59 @@ public class MessagesFragment extends Fragment {
         return rootview;
     }
 
-    private void refresh() {
-        swipeRefreshLayout.setRefreshing(false);
+    private void refresh()
+    {
+        DBRmessages = database.getReference("messages");
+        listdata1.clear();
+        DBRmessages.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //updateList(dataSnapshot);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        DBRmessages.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.i(TAG, "onChildAdded: ");
+                updateList(dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {updateList(dataSnapshot);
+                Log.i(TAG, "onChildChanged: ");}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {updateList(dataSnapshot);
+                Log.i(TAG, "onChildRemoved: ");}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {updateList(dataSnapshot);
+                Log.i(TAG, "onChildMoved: ");}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
+    public void updateList(DataSnapshot dataSnapshot)
+    {
+        Message message= dataSnapshot.getValue(Message.class);
+        listdata1.add(message);
+    }
 
     public class MyAdapter extends RecyclerView.Adapter<MessagesFragment.MyAdapter.MyViewHolder>{
 
         private List<Message> listarray = new ArrayList<>();
 
         public MyAdapter(List<Message> list){
-            this.listarray=SplashActivity.listdata1;
-            //Collections.reverse(this.listarray);
+            this.listarray.clear();
+            this.listarray= listdata1;
         }
 
         @Override

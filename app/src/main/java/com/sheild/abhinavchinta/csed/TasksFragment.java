@@ -251,10 +251,6 @@ public class TasksFragment extends Fragment {
         }
     }
 
-
-
-
-
     public class MyAdapter extends RecyclerView.Adapter<TasksFragment.MyAdapter.MyViewHolder>{
 
         private List<Task> listarray = new ArrayList<>();
