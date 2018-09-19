@@ -79,6 +79,7 @@ public class SplashActivity extends AppCompatActivity {
 
             DBRmessages = database.getReference("messages");
             listdata1.clear();
+            Test.listdata.clear();
             DBRmessages.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -99,7 +100,6 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Message message= dataSnapshot.getValue(Message.class);
-
                     listdata1.add(message);
                     Log.i("TAG", "onChildAdded: here1 ");
                     if (callback!=null)
@@ -170,7 +170,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
         DBRmembers = database.getReference("member");
-
+        Test.listmembers.clear();
         listdata2.clear();
         DBRmembers.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

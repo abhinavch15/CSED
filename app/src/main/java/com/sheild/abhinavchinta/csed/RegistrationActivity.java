@@ -101,7 +101,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 }
                 else {
-                    Toast.makeText(getApplicationContext(),"invalid  format",Toast.LENGTH_LONG).show();}
+                    Toast.makeText(getApplicationContext(),"invalid  format",Toast.LENGTH_LONG).show();etemail.setError("Not a CSED email ID");}
                 if("".equals(etpassword.getText().toString())) {
                     etpassword.setError("Field cannot be empty");
                     etpassword.requestFocus();

@@ -150,7 +150,7 @@ public class MessagesFragment extends Fragment implements SplashActivity.CallBac
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Toast.makeText(getContext(),"Check your internet connection",Toast.LENGTH_LONG).show();
             }
         });
         DBRmessages.addChildEventListener(new ChildEventListener() {
