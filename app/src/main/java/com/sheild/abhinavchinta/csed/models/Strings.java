@@ -18,7 +18,7 @@ public class Strings {
                 return ("Editorial and Blog");
 
             case ("1"):
-                return ("Events, UR and Strategies");
+                return ("Events");
 
             case ("2"):
                 return ("Expansion");
@@ -38,7 +38,7 @@ public class Strings {
             case ("7"):
                 return ("Startups");
             case ("8"):
-                return ("Technical and Design");
+                return ("Tech and Design");
             default:
                 return (" ");
 

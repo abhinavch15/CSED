@@ -12,14 +12,10 @@ public class Message {
 
     public Message(){}
 
-    public Message(String date, String deptcode, String designation, String message, String name, String regno, String time) {
+    public Message(String message, String name, String date) {
         this.date = date;
-        this.deptcode = deptcode;
-        this.designation = designation;
         this.message = message;
         this.name = name;
-        this.regno = regno;
-        this.time = time;
     }
 
     public void setDate(String date) {

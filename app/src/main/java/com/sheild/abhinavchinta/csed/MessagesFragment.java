@@ -41,11 +41,14 @@ import static android.content.ContentValues.TAG;
 import static com.sheild.abhinavchinta.csed.SplashActivity.listdata1;
 
 
-public class MessagesFragment extends Fragment {
+
+public class MessagesFragment extends Fragment implements SplashActivity.CallBack {
+
+
 
     private DatabaseReference mRestaurantReference;
     private FirebaseRecyclerAdapter mFirebaseAdapter;
-    private RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
     private MyAdapter adapter;
     private List<Message> listdataa= new ArrayList<>();
     private FirebaseDatabase database;
@@ -67,13 +70,16 @@ public class MessagesFragment extends Fragment {
         //listdataa= Test
         View rootview =  inflater.inflate(R.layout.fragment_messages, container, false);
         database = FirebaseDatabase.getInstance();
-        adapter = new MyAdapter(listdataa);
+        adapter = new MyAdapter(listdata1);
         recyclerView= (RecyclerView)rootview.findViewById(R.id.recyclerview1);
         recyclerView.setAdapter(adapter);
         LinearLayoutManager LM = new LinearLayoutManager(getContext());
         //LM.setReverseLayout(true);
         //LM.setStackFromEnd(true);
+        //recyclerView.smoothScrollToPosition(listdata1.size());
         recyclerView.setLayoutManager(LM);
+
+        SplashActivity.callback = MessagesFragment.this;
 
         swipeRefreshLayout = (SwipeRefreshLayout)rootview.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -103,10 +109,10 @@ public class MessagesFragment extends Fragment {
 
                                             public void onClick(DialogInterface dialog, int which) {
                                                 String message = input.getText().toString();
-                                                Message newmessage = new Message();
-                                                newmessage.setMessage(message);
-                                                newmessage.setName(Test.name);
-                                                newmessage.setDate(new SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(new Date()));
+                                                Message newmessage = new Message(message,Test.name,new SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(new Date()));
+//                                                newmessage.setMessage(message);
+//                                                newmessage.setName(Test.name);
+//                                                newmessage.setDate(new SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(new Date()));
                                                 db= FirebaseDatabase.getInstance();
                                                 dbr = db.getReference().child("messages");
                                                 String id  = dbr.push().getKey();
@@ -125,8 +131,9 @@ public class MessagesFragment extends Fragment {
                                       }
                                   });
 
-                //recyclerView.setAdapter(adapter);
 
+                //recyclerView.setAdapter(adapter);
+        recyclerView.scrollToPosition(listdata1.size()-1);
         return rootview;
     }
 
@@ -149,7 +156,7 @@ public class MessagesFragment extends Fragment {
         DBRmessages.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.i(TAG, "onChildAdded: ");
+                Log.i(TAG, "onChildAdded: herrr");
                 updateList(dataSnapshot);
             }
 
@@ -176,13 +183,18 @@ public class MessagesFragment extends Fragment {
         listdata1.add(message);
     }
 
+    @Override
+    public void methodToCallBack() {
+        recyclerView.smoothScrollToPosition(listdata1.size()-1);
+    }
+
     public class MyAdapter extends RecyclerView.Adapter<MessagesFragment.MyAdapter.MyViewHolder>{
 
         private List<Message> listarray = new ArrayList<>();
 
         public MyAdapter(List<Message> list){
-            this.listarray.clear();
-            this.listarray= listdata1;
+            //this.listarray.clear();
+            this.listarray= list;
         }
 
         @Override

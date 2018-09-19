@@ -62,7 +62,10 @@ public class HomeFragment extends Fragment {
         TextView department = (TextView)rootview.findViewById(R.id.department);
 
         txvname.setText(Test.getName());
-        department.setText(Test.getDepartment());
+        if (Test.getDepartment2()==null){department.setText(Test.getDepartment());}
+        else if (Test.getDepartment3()==null){department.setText(Test.getDepartment()+", "+Test.getDepartment2());}
+        else { department.setText(Test.getDepartment()+", "+Test.getDepartment2()+", "+Test.getDepartment3()); }
+
 
         swipeRefreshLayout = (SwipeRefreshLayout)rootview.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -119,7 +122,10 @@ public class HomeFragment extends Fragment {
         @Override
         public void onBindViewHolder(HomeFragment.MyAdapter.MyViewHolder holder, int position) {
             final Member member = listarray.get(position);
-            holder.textViewdate.setText(Strings.getDepartmentName(member.getDepartment()));
+            if (member.getDepartment2()==null){holder.textViewdate.setText(Strings.getDepartmentName(member.getDepartment()));}
+            else if (member.getDepartment3()==null){holder.textViewdate.setText(Strings.getDepartmentName(member.getDepartment())+", "+Strings.getDepartmentName(member.getDepartment2()));}
+            else { holder.textViewdate.setText(Strings.getDepartmentName(member.getDepartment())+", "+Strings.getDepartmentName(member.getDepartment2())+", "+Strings.getDepartmentName(member.getDepartment3())); }
+            //holder.textViewdate.setText(Strings.getDepartmentName(member.getDepartment()));
             holder.textViewname.setText(member.getName());
             holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

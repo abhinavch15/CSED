@@ -19,7 +19,7 @@ public class Task {
 
     }
 
-    public Task(String date, int day, int month, int year, String deadline, String departmentCode, String designation, String message, String name, String registrationNumber, int  status, String time) {
+    public Task( String departmentCode, String message,String date,String deadline, int day, int month, int year, String name) {
         this.date = date;
         this.day = day;
         this.month = month;
@@ -29,9 +29,6 @@ public class Task {
         this.designation = designation;
         this.message = message;
         this.name = name;
-        this.registrationNumber = registrationNumber;
-        this.status = status;
-        this.time = time;
     }
 
     public int getDay() {return day;}

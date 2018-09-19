@@ -178,6 +178,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                                         //Toast.makeText(RegistrationActivity.this, "Authentication success." + task.getException(),Toast.LENGTH_LONG).show();
 
                                                         Member member = new Member(1,seletedItems.get(0).toString(),"Core committee member",email,0,name,phno,regno);
+                                                        if (seletedItems.size()==2){member.setDepartment2(seletedItems.get(1).toString());}
+                                                        if (seletedItems.size()==3){member.setDepartment3(seletedItems.get(2).toString());}
                                                         db= FirebaseDatabase.getInstance();
                                                         dbr = db.getReference().child("member").child(auth.getUid());
                                                         dbr.setValue(member);

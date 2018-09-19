@@ -36,6 +36,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.sheild.abhinavchinta.csed.models.Member;
+import com.sheild.abhinavchinta.csed.models.Strings;
 import com.sheild.abhinavchinta.csed.models.Task;
 import com.sheild.abhinavchinta.csed.models.Test;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -88,7 +89,7 @@ public class TasksFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootview =  inflater.inflate(R.layout.fragment_tasks, container, false);
         database = FirebaseDatabase.getInstance();
-        adapter = new TasksFragment.MyAdapter(listdataa);
+        adapter = new TasksFragment.MyAdapter(listdata3);
         recyclerView= (RecyclerView)rootview.findViewById(R.id.recyclerview3);
         recyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager LM = new LinearLayoutManager(getContext());
@@ -107,100 +108,159 @@ public class TasksFragment extends Fragment {
         final CharSequence[] items = {" Editorial and Blog "," Events, UR and Strategies "," Expansion "," General Secretary" ," Human Resources "," Marketing "," Public Relations "," Startups "," Technical and Design"};
         final List<Integer> seletedItems=new ArrayList<Integer>();
         seletedItems.clear();
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog dialog = new AlertDialog.Builder(getContext())
-                        .setTitle("Please select the departments you want to assign the task to")
-                        .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
-                                if (isChecked) {
-                                    // If the user checked the item, add it to the selected items
-                                    seletedItems.add(indexSelected);
-                                } else if (seletedItems.contains(indexSelected)) {
-                                    // Else, if the item is already in the array, remove it
-                                    seletedItems.remove(Integer.valueOf(indexSelected));
+        if (Test.IsAdmin==3)
+        {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog dialog = new AlertDialog.Builder(getContext())
+                            .setTitle("Please select the departments you want to assign the task to")
+                            .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
+                                    if (isChecked) {
+                                        // If the user checked the item, add it to the selected items
+                                        seletedItems.add(indexSelected);
+                                    } else if (seletedItems.contains(indexSelected)) {
+                                        // Else, if the item is already in the array, remove it
+                                        seletedItems.remove(Integer.valueOf(indexSelected));
+                                    }
                                 }
-                            }
-                        }).setPositiveButton("DONE", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                //  Your code when user clicked on OK
-                                //  You can write the code  to save the selected item here
-                                for (int a :seletedItems) {
-                                }
+                            }).setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    //  Your code when user clicked on OK
+                                    //  You can write the code  to save the selected item here
+                                    for (int a :seletedItems) {
+                                    }
 
-                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-                                alertDialog.setMessage("Enter Task");
+                                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                                    alertDialog.setMessage("Enter Task");
 
-                                final EditText input = new EditText(getContext());
-                                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.MATCH_PARENT);
-                                input.setLayoutParams(lp);
-                                alertDialog.setView(input);
+                                    final EditText input = new EditText(getContext());
+                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.MATCH_PARENT);
+                                    input.setLayoutParams(lp);
+                                    alertDialog.setView(input);
 
-                                alertDialog.setPositiveButton("SUBMIT",
-                                        new DialogInterface.OnClickListener() {
+                                    alertDialog.setPositiveButton("NEXT",
+                                            new DialogInterface.OnClickListener() {
 
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                message = input.getText().toString();
-                                                Calendar c = Calendar.getInstance();
-                                                int year = c.get(Calendar.YEAR);
-                                                int month = c.get(Calendar.MONTH);
-                                                int day = c.get(Calendar.DAY_OF_MONTH);
-                                                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                                                        getContext(), new DatePickerDialog.OnDateSetListener() {
-                                                    @Override
-                                                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                                                        month++;
-                                                        duedate = day+"/"+month+"/"+year;
-                                                        Log.i(TAG, "onDateSet: "+day+"/"+month+"/"+year);
-                                                        for (int a :seletedItems) {
-                                                            Log.i(TAG, "onDateSet: reached");
-                                                            Task newtask = new Task();
-                                                            newtask.setDepartmentCode(String.valueOf(a));
-                                                            newtask.setMessage(message);
-                                                            newtask.setDate(new SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(new Date()));
-                                                            newtask.setDeadline(duedate);
-                                                            newtask.setDay(day);
-                                                            newtask.setMonth(month);
-                                                            newtask.setYear(year);
-                                                            newtask.setName(Test.name);
-                                                            db= FirebaseDatabase.getInstance();
-                                                            dbr = db.getReference().child("task");
-                                                            String id  = dbr.push().getKey();
-                                                            dbr.child(id).setValue(newtask);
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    message = input.getText().toString();
+                                                    Calendar c = Calendar.getInstance();
+                                                    int year = c.get(Calendar.YEAR);
+                                                    int month = c.get(Calendar.MONTH);
+                                                    int day = c.get(Calendar.DAY_OF_MONTH);
+                                                    DatePickerDialog datePickerDialog = new DatePickerDialog(
+                                                            getContext(), new DatePickerDialog.OnDateSetListener() {
+                                                        @Override
+                                                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                                            month++;
+                                                            duedate = day+"/"+month+"/"+year;
+                                                            Log.i(TAG, "onDateSet: "+day+"/"+month+"/"+year);
+                                                            for (int a :seletedItems) {
+                                                                Log.i(TAG, "onDateSet: reached");
+                                                                Task newtask = new Task();
+                                                                newtask.setDepartmentCode(String.valueOf(a));
+                                                                newtask.setMessage(message);
+                                                                newtask.setDate(new SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(new Date()));
+                                                                newtask.setDeadline(duedate);
+                                                                newtask.setDay(day);
+                                                                newtask.setMonth(month);
+                                                                newtask.setYear(year);
+                                                                newtask.setName(Test.name);
+                                                                db= FirebaseDatabase.getInstance();
+                                                                dbr = db.getReference().child("task");
+                                                                String id  = dbr.push().getKey();
+                                                                dbr.child(id).setValue(newtask);
+                                                            }
+                                                            seletedItems.clear();
                                                         }
-                                                        seletedItems.clear();
-                                                    }
-                                                },  year, month, day);
-                                                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);//test this
-                                                datePickerDialog.setTitle("Select the deadline");
-                                                datePickerDialog.show();
-                                            }
-                                        });
+                                                    },  year, month, day);
+                                                    datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);//test this
+                                                    datePickerDialog.setTitle("Select the deadline");
+                                                    datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, "Set Deadline", datePickerDialog);
+                                                    datePickerDialog.show();
+                                                }
+                                            });
 
-                                alertDialog.setNegativeButton("CANCEL",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-                                                seletedItems.clear();
-                                            }
-                                        });
-                                alertDialog.show();
-                            }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                seletedItems.clear();
-                            }
-                        }).create();
-                dialog.show();
-            }
-        });
+                                    alertDialog.setNegativeButton("CANCEL",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                    seletedItems.clear();
+                                                }
+                                            });
+                                    alertDialog.show();
+                                }
+                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    seletedItems.clear();
+                                }
+                            }).create();
+                    dialog.show();
+                }//////
+            });
+        }
+        else
+        {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+            alertDialog.setMessage("Enter Task");
 
+            final EditText input = new EditText(getContext());
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            input.setLayoutParams(lp);
+            alertDialog.setView(input);
+
+            alertDialog.setPositiveButton("SUBMIT",
+                    new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface dialog, int which) {
+                            message = input.getText().toString();
+                            Calendar c = Calendar.getInstance();
+                            int year = c.get(Calendar.YEAR);
+                            int month = c.get(Calendar.MONTH);
+                            int day = c.get(Calendar.DAY_OF_MONTH);
+                            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                                    getContext(), new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                    month++;
+                                    duedate = day+"/"+month+"/"+year;
+                                    Log.i(TAG, "onDateSet: "+day+"/"+month+"/"+year);
+                                    Log.i(TAG, "onDateSet: reached");
+                                    Task newtask = new Task(Test.departmentcode,message,new SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(new Date()),duedate,day,month,year,Test.name);
+                                    db= FirebaseDatabase.getInstance();
+                                    dbr = db.getReference().child("task");
+                                    String id  = dbr.push().getKey();
+                                    dbr.child(id).setValue(newtask);
+                                }
+                            },  year, month, day);
+                            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);//test this
+                            datePickerDialog.setTitle("Select the deadline");
+                            datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, "Set Deadline", datePickerDialog);
+                            datePickerDialog.show();
+                        }
+                    });
+
+            alertDialog.setNegativeButton("CANCEL",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            alertDialog.show();
+        }
+            });
+        }
         return rootview;
     }
 
@@ -244,7 +304,7 @@ public class TasksFragment extends Fragment {
     private void test(DataSnapshot dataSnapshot)
     {
         Task task= dataSnapshot.getValue(Task.class);
-        if (task.getDepartmentCode().equals(Test.getDepartmentcode())&&((task.getDay()>=day&&task.getMonth()==month&&task.getYear()==year)||(task.getMonth()>month&&task.getYear()==year)||(task.getYear()>year))) {
+        if (((task.getDepartmentCode().equals(Test.getDepartmentcode()))||(task.getDepartmentCode().equals(Test.getDepartmentcode2()))||(task.getDepartmentCode().equals(Test.getDepartmentcode3())))&&((task.getDay()>=day&&task.getMonth()==month&&task.getYear()==year)||(task.getMonth()>month&&task.getYear()==year)||(task.getYear()>year))) {
             listdata3.add(task);
             Log.i(TAG, "Current: "+day+"/"+month+"/"+year);
             Log.i(TAG, "From database: "+task.getDay()+"/"+task.getMonth()+"/"+task.getYear());
@@ -256,9 +316,8 @@ public class TasksFragment extends Fragment {
         private List<Task> listarray = new ArrayList<>();
 
         public MyAdapter(List<Task> list){
-            this.listarray.clear();
 
-            this.listarray= listdata3;
+            this.listarray= list;
             //Collections.reverse(this.listarray);
         }
 
@@ -272,7 +331,7 @@ public class TasksFragment extends Fragment {
         public void onBindViewHolder(TasksFragment.MyAdapter.MyViewHolder holder, int position) {
             Task task = listarray.get(position);
             holder.textViewdate.setText(task.getDate());
-            holder.textViewname.setText(task.getName());
+            holder.textViewname.setText(Strings.getDepartmentName(task.getDepartmentCode())+" - "+task.getName());
             holder.textViewmessage.setText(task.getMessage());
             holder.textViewdeadline.setText("Deadline: "+task.getDeadline());
         }

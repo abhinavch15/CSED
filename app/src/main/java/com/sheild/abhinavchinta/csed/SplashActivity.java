@@ -25,7 +25,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 public class SplashActivity extends AppCompatActivity {
+
+    public interface CallBack {                   //declare an interface with the callback methods, so you can use on more than one class and just refer to the interface
+        void methodToCallBack();
+    }
+
+    public static CallBack callback;
 
     private FirebaseAuth auth;
     public static List<Message> listdata1= new ArrayList<>();
@@ -74,7 +82,6 @@ public class SplashActivity extends AppCompatActivity {
             DBRmessages.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.i("TAG", "HEEEEEEERE");
                     Test.listdata=listdata1;
                     count++;
                     if (count==3) {
@@ -92,7 +99,15 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Message message= dataSnapshot.getValue(Message.class);
+
                     listdata1.add(message);
+                    Log.i("TAG", "onChildAdded: here1 ");
+                    if (callback!=null)
+                    {
+                        Log.i("TAG", "onChildAdded: here2 ");
+                        callback.methodToCallBack();
+                    }
+
                 }
 
                 @Override
@@ -131,6 +146,14 @@ public class SplashActivity extends AppCompatActivity {
                         Member mymember= dataSnapshot.getValue(Member.class);
                         Test.name=mymember.getName();
                         Test.department= Strings.getDepartmentName(mymember.getDepartment());
+                        try {
+                            Test.department2 = Strings.getDepartmentName(mymember.getDepartment2());
+                            Test.department3 = Strings.getDepartmentName(mymember.getDepartment3());
+                            Test.departmentcode2 = mymember.getDepartment2();
+                            Test.departmentcode3 = mymember.getDepartment3();
+                        }
+                        catch (Exception a){}
+
                         Test.departmentcode = mymember.getDepartment();
                         Test.IsAdmin = mymember.getIsAdmin();
 
@@ -214,7 +237,7 @@ public class SplashActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Task task= dataSnapshot.getValue(Task.class);
                 Log.i(TAG, "comparingggg "+task.getDepartmentCode()+"and"+Test.getDepartmentcode());
-                if (task.getDepartmentCode().equals(Test.getDepartmentcode())&&((task.getDay()>=day&&task.getMonth()==month&&task.getYear()==year)||(task.getMonth()>month&&task.getYear()==year)||(task.getYear()>year))) {
+                if (((task.getDepartmentCode().equals(Test.getDepartmentcode()))||(task.getDepartmentCode().equals(Test.getDepartmentcode2()))||(task.getDepartmentCode().equals(Test.getDepartmentcode3())))&&((task.getDay()>=day&&task.getMonth()==month&&task.getYear()==year)||(task.getMonth()>month&&task.getYear()==year)||(task.getYear()>year))) {
                     listdata3.add(task);
                     Log.i(TAG, "Current: "+day+"/"+month+"/"+year);
                     Log.i(TAG, "From database: "+task.getDay()+"/"+task.getMonth()+"/"+task.getYear());

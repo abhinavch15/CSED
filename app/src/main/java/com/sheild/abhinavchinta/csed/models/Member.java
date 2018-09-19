@@ -5,6 +5,8 @@ package com.sheild.abhinavchinta.csed.models;
 public class Member {
     int available;
     String department;
+    String department2;
+    String department3;
     String designation;
     String email;
     int isAdmin;
@@ -23,6 +25,22 @@ public class Member {
         this.name = name;
         this.phoneNumber = phoneno;
         this.registrationNumber = regno;
+    }
+
+    public String getDepartment2() {
+        return department2;
+    }
+
+    public void setDepartment2(String department2) {
+        this.department2 = department2;
+    }
+
+    public String getDepartment3() {
+        return department3;
+    }
+
+    public void setDepartment3(String department3) {
+        this.department3 = department3;
     }
 
     public int getAvailable() {
