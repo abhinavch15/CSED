@@ -24,6 +24,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -76,6 +78,29 @@ public class RegistrationActivity extends AppCompatActivity {
                     etemail.requestFocus();
                     return;
                 }
+                String validemail = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+
+                        "\\@" +
+
+                        "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+
+                        "(" +
+
+                        "\\." +
+
+                        "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+
+                        ")+";
+                String edtmail=etemail.getText().toString();
+                Matcher matcher= Pattern.compile(validemail).matcher(edtmail);
+                if(matcher.matches())
+                {
+                    Toast.makeText(getApplicationContext(),"True",Toast.LENGTH_LONG).show();
+
+
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"invalid  format",Toast.LENGTH_LONG).show();}
                 if("".equals(etpassword.getText().toString())) {
                     etpassword.setError("Field cannot be empty");
                     etpassword.requestFocus();
