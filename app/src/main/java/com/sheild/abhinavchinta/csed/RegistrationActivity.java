@@ -79,16 +79,17 @@ public class RegistrationActivity extends AppCompatActivity {
                     return;
                 }
                 String validemail = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
-
+                        "\\." +
+                        "csedvit" +
                         "\\@" +
 
-                        "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                        "gmail" +
 
                         "(" +
 
                         "\\." +
 
-                        "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                        "com" +
 
                         ")+";
                 String edtmail=etemail.getText().toString();
