@@ -1,53 +1,79 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#212121"
     tools:context="com.example.abhinavchinta.csed.com.sheild.abhinavchinta.csed.HomeFragment">
+
     <LinearLayout
 
-        android:elevation="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_margin="0dp"
-        android:background="@drawable/rectangle">
+        android:background="@drawable/rectangle"
+        android:elevation="20dp"
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/text"
-            android:fontFamily="@font/helveticaneuebd"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/helveticaneuebd"
+            android:text="Welcome"
             android:textColor="#DDDDDD"
-            android:textSize="35dp"
-            android:text="Welcome" />
+            android:textSize="35dp" />
+
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/helveticaneuebd"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="12dp"
-            android:textSize="20dp"
-            android:textColor="#DDDDDD"
+            android:fontFamily="@font/helveticaneuebd"
             android:text="Abhinav Chinta"
+            android:textColor="#DDDDDD"
+            android:textSize="20dp"
 
             />
+
         <TextView
             android:id="@+id/department"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:fontFamily="@font/helveticaneuebd"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="4dp"
-            android:textSize="12dp"
-            android:textColor="#DDDDDD"
+            android:fontFamily="@font/helveticaneuebd"
             android:text="TECHNICAL"
+            android:textColor="#DDDDDD"
+            android:textSize="12dp"
 
             />
+
+        <ImageButton
+            android:id="@+id/imagebtn"
+            android:layout_width="34dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:src="@android:drawable/btn_star" />
+
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="324dp"
+            android:layout_height="wrap_content"
+
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Search" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/result_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
 
     </LinearLayout>

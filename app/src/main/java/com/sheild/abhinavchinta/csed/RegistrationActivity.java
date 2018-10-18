@@ -36,6 +36,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private FirebaseDatabase db;
     private DatabaseReference dbr;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
