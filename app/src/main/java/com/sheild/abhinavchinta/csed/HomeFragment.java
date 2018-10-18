@@ -14,10 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.abhinavchinta.csed.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,7 +44,7 @@ public class HomeFragment extends Fragment {
     private FirebaseRecyclerAdapter mFirebaseAdapter;
     private RecyclerView recyclerView;
     private HomeFragment.MyAdapter adapter;
-    private List<Member> listdataa= new ArrayList<>();
+    private List<String> listdataa= new ArrayList<String>();
     private FirebaseDatabase database;
     private DatabaseReference DBRmembers;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -143,8 +141,9 @@ public class HomeFragment extends Fragment {
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     String uid=snapshot.getKey();
                     String full_name = snapshot.child("full_name").getValue(String.class);
-                    String department = snapshot.child("department").getValue(String.class);
+
                     if(full_name.contains(searchedstring)){
+                        listdataa.add(full_name);
 
                     }
 
@@ -165,7 +164,7 @@ public class HomeFragment extends Fragment {
         private List<Member> listarrayfull;
 
 
-        public MyAdapter(List<Member> list){
+        public MyAdapter(List<String> list){
             this.listarray= Test.getListmembers();
         }
 
